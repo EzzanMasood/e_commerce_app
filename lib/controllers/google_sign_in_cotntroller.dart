@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecom/controllers/get_device_token_controller.dart';
 import 'package:ecom/models/user_models.dart';
 import 'package:ecom/screens/user-panel/mains_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +11,7 @@ class  GoogleSignInController extends GetxController{
   final GoogleSignIn googleSignIn =GoogleSignIn();
   final FirebaseAuth _auth= FirebaseAuth.instance;
   Future <void> signInWithGoogle() async{
+    final GetDeviceTokenController getDeviceTokenController=Get.put(GetDeviceTokenController());
   try {
     final GoogleSignInAccount ? googleSignInAccount = await googleSignIn.signIn();
 
@@ -25,7 +27,7 @@ class  GoogleSignInController extends GetxController{
 
       final User? user = userCredential.user;
       if(user!=null){
-        UserModels userModels=UserModels(uId: user.uid, email:user.email.toString(), username: user.displayName.toString(), phone:user.phoneNumber.toString(), userImg: user.photoURL.toString(), userDeviceToken: '', country:'', userAddress: '', street:'', isAdmin: false, isActive: true, createdOn: DateTime.now()
+        UserModels userModels=UserModels(uId: user.uid, email:user.email.toString(), username: user.displayName.toString(), phone:user.phoneNumber.toString(), userImg: user.photoURL.toString(), userDeviceToken: getDeviceTokenController.deviceToken.toString(), country:'',city: '', userAddress: '', street:'', isAdmin: false, isActive: true, createdOn: DateTime.now()
         );
        await FirebaseFirestore.instance.collection('users').doc(user.uid).set(userModels.toMap());
        EasyLoading.dismiss();

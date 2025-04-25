@@ -74,7 +74,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: TextButton.icon(onPressed: (){
-         Get.offAll(()=>SignInScreen());       
+         Get.to(()=>SignInScreen());       
               },
               icon: Image.asset('assets/images/gmail_icon.png',
               height: Get.height/12,
