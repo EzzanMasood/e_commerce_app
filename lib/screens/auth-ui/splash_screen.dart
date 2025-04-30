@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'package:ecom/controllers/get_user_data_controller.dart';
+import 'package:ecom/screens/admin-panel/admin_main_screen.dart';
 import 'package:ecom/screens/auth-ui/welcome_screen.dart';
+import 'package:ecom/screens/user-panel/mains_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -12,12 +16,44 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  User? user= FirebaseAuth.instance.currentUser;
 @override
 void initState(){
   super.initState();
 Timer(Duration(seconds: 3), (){
-Get.offAll(()=>WelcomeScreen());
+loggedIn(context);
 });
+}
+ Future<void> loggedIn(BuildContext context) async {
+  if (user != null) {
+    final GetUserDataController getUserDataController = Get.put(GetUserDataController());
+    try {
+      var userData = await getUserDataController.getUserData(user!.uid);
+      
+      // Check if userData is not empty and has the admin field
+      if (userData.isNotEmpty) {
+        // Check for different possible admin field names
+        final isAdmin = userData[0]["Admin"] ??  // uppercase
+                        userData[0]["admin"] ??  // lowercase
+                      false;                  // default
+        
+        if (isAdmin == true) {
+          Get.offAll(() => AdminMainScreen());
+        } else {
+          Get.offAll(() => MainScreen());
+        }
+      } else {
+        // No user data found - treat as regular user
+        Get.offAll(() => MainScreen());
+      }
+    } catch (e) {
+      debugPrint("Error getting user data: $e");
+      // If there's an error, send to main screen as fallback
+      Get.offAll(() => MainScreen());
+    }
+  } else {
+    Get.offAll(() => WelcomeScreen());
+  }
 }
 
   @override

@@ -1,4 +1,6 @@
+import 'package:ecom/controllers/get_user_data_controller.dart';
 import 'package:ecom/controllers/sign_in_controller.dart';
+import 'package:ecom/screens/admin-panel/admin_main_screen.dart';
 import 'package:ecom/screens/auth-ui/forget_password_screen.dart';
 import 'package:ecom/screens/user-panel/mains_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +20,7 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final SignInController _signInController=Get.put(SignInController());
+   final GetUserDataController getUserDataController=Get.put(GetUserDataController());
   TextEditingController userEmail = TextEditingController();
     TextEditingController userPassword = TextEditingController();
   @override
@@ -153,14 +156,25 @@ class _SignInScreenState extends State<SignInScreen> {
                     else {
                    UserCredential? userCredential =await _signInController.
                    signInMethod(email, password);
+                   var userData=await getUserDataController.getUserData(userCredential!.user!.uid);
                    if(userCredential!=null){
                     if(userCredential.user!.emailVerified){
-                    Get.snackbar("Succes","Login Successful",
+                      if(userData[0]["isAdmin"]==true){
+                        Get.snackbar("Succes","Admin Login Successful",
+                    backgroundColor: AppConstants.appSecondaryColor,
+                    colorText: AppConstants.appTextColor,
+                    snackPosition: SnackPosition.BOTTOM,
+                    );
+                    Get.offAll(()=>AdminMainScreen());
+                      }
+                      else{
+                         Get.snackbar("Succes","Login Successful",
                     backgroundColor: AppConstants.appSecondaryColor,
                     colorText: AppConstants.appTextColor,
                     snackPosition: SnackPosition.BOTTOM,
                     );
                     Get.offAll(()=>MainScreen());
+                      }
                     }
                     else{
                       Get.snackbar("Error", "Please veriy your email",

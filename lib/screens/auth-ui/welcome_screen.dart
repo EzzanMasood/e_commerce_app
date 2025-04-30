@@ -2,7 +2,6 @@
 import 'package:ecom/screens/auth-ui/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../controllers/google_sign_in_cotntroller.dart';
