@@ -29,13 +29,8 @@ loggedIn(context);
     final GetUserDataController getUserDataController = Get.put(GetUserDataController());
     try {
       var userData = await getUserDataController.getUserData(user!.uid);
-      
-      // Check if userData is not empty and has the admin field
       if (userData.isNotEmpty) {
-        // Check for different possible admin field names
-        final isAdmin = userData[0]["Admin"] ??  // uppercase
-                        userData[0]["admin"] ??  // lowercase
-                      false;                  // default
+        final isAdmin = userData[0]["isAdmin"] ;
         
         if (isAdmin == true) {
           Get.offAll(() => AdminMainScreen());
@@ -43,12 +38,10 @@ loggedIn(context);
           Get.offAll(() => MainScreen());
         }
       } else {
-        // No user data found - treat as regular user
         Get.offAll(() => MainScreen());
       }
     } catch (e) {
       debugPrint("Error getting user data: $e");
-      // If there's an error, send to main screen as fallback
       Get.offAll(() => MainScreen());
     }
   } else {

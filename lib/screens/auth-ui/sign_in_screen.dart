@@ -157,40 +157,32 @@ class _SignInScreenState extends State<SignInScreen> {
                    UserCredential? userCredential =await _signInController.
                    signInMethod(email, password);
                    var userData=await getUserDataController.getUserData(userCredential!.user!.uid);
-                   if(userCredential!=null){
-                    if(userCredential.user!.emailVerified){
-                      if(userData[0]["isAdmin"]==true){
-                        Get.snackbar("Succes","Admin Login Successful",
-                    backgroundColor: AppConstants.appSecondaryColor,
-                    colorText: AppConstants.appTextColor,
-                    snackPosition: SnackPosition.BOTTOM,
-                    );
-                    Get.offAll(()=>AdminMainScreen());
-                      }
-                      else{
-                         Get.snackbar("Succes","Login Successful",
-                    backgroundColor: AppConstants.appSecondaryColor,
-                    colorText: AppConstants.appTextColor,
-                    snackPosition: SnackPosition.BOTTOM,
-                    );
-                    Get.offAll(()=>MainScreen());
-                      }
-                    }
-                    else{
-                      Get.snackbar("Error", "Please veriy your email",
-                      backgroundColor: AppConstants.appSecondaryColor,
-                      colorText: AppConstants.appTextColor,
-                      snackPosition: SnackPosition.BOTTOM,
-                      );
-                    }
-                   }
-                   else{
-                  Get.snackbar("Error", "Please try again",
+                  if(userCredential.user!.emailVerified){
+                    if(userData[0]["isAdmin"]==true){
+                      Get.snackbar("Succes","Admin Login Successful",
                   backgroundColor: AppConstants.appSecondaryColor,
                   colorText: AppConstants.appTextColor,
-                  snackPosition: SnackPosition.BOTTOM,);
-                   }
+                  snackPosition: SnackPosition.BOTTOM,
+                  );
+                  Get.offAll(()=>AdminMainScreen());
                     }
+                    else{
+                       Get.snackbar("Succes","Login Successful",
+                  backgroundColor: AppConstants.appSecondaryColor,
+                  colorText: AppConstants.appTextColor,
+                  snackPosition: SnackPosition.BOTTOM,
+                  );
+                  Get.offAll(()=>MainScreen());
+                    }
+                  }
+                  else{
+                    Get.snackbar("Error", "Please veriy your email",
+                    backgroundColor: AppConstants.appSecondaryColor,
+                    colorText: AppConstants.appTextColor,
+                    snackPosition: SnackPosition.BOTTOM,
+                    );
+                  }
+                                     }
                   },
                   child: Text(
                     'Sign In',
